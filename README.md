@@ -109,6 +109,6 @@ func New() *ExampleAdapter {
 在主程序入口中导入适配器：
 
 ```go
-_ "github.com/meloshub/meloshub-adapters/example"
+import _ "github.com/meloshub/meloshub-adapters/example"
 ```
 
