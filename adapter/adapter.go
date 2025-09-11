@@ -14,12 +14,13 @@ type SearchOptions struct {
 	Limit int
 }
 
-// Adapter 是所有音乐平台适配器必须实现的接口。
-// 它定义了从不同音乐源获取数据的标准化方法。
+// Adapter 是所有音乐平台适配器必须实现的接口
 type Adapter interface {
-	// Platform 返回适配器的平台标识符
-	// 这个标识符应该全局唯一且为小写字符串。
-	Platform() string
+	// Metadata 返回适配器的元数据信息
+	Metadata() Metadata
+
+	// Id 获取适配器唯一标识符
+	Id() string
 
 	// SearchSong 根据关键词搜索歌曲。
 	// 返回一个歌曲切片和可能发生的错误。
@@ -28,26 +29,35 @@ type Adapter interface {
 	// GetSongByID 根据歌曲ID获取歌曲的详细信息。
 	GetSongByID(id string) (*model.Song, error)
 
+	// GetLyricsByID 获取歌词信息。
+	GetLyricsByID(id string) (string, error)
+
 	// GetAlbumSongsByID 根据专辑ID获取该专辑下的所有歌曲。
 	GetAlbumSongsByID(id string) ([]model.Song, error)
 }
 
 type Base struct {
-	PlatformName string           //平台唯一标识
-	Session      *network.Session //会话实例
-	Logger       *slog.Logger     //日志上下文实例
-	Config       map[string]any   //适配器配置项
+	id      string           //适配器唯一标识
+	metadata Metadata        //适配器元数据
+	Session *network.Session //会话实例
+	Logger  *slog.Logger     //日志上下文实例
+	Config  map[string]any   //适配器配置项
 }
 
 // Init 初始化 BaseAdapter
-func (b *Base) Init(platform string) {
-	b.PlatformName = platform
+func (b *Base) Init(meta Metadata) {
+	b.id = meta.Id
+	b.metadata = meta
 	b.Session = network.NewSession()
-	b.Logger = logging.Get().With("adapter", platform)
+	b.Logger = logging.Get().With("adapter", meta.Id)
 	b.Config = make(map[string]any)
 }
 
-// Platform 获取适配器对应平台的唯一标识符
-func (b *Base) Platform() string {
-	return b.PlatformName
+// Id 获取适配器对应平台的唯一标识符
+func (b *Base) Id() string {
+	return b.id
+}
+
+func (b *Base) Metadata() Metadata {
+	return b.metadata
 }

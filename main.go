@@ -22,7 +22,7 @@ func main() {
 		slog.Warn("Adapters list is empty")
 	}
 	for _, v := range adapters {
-		println(v.Platform())
+		println(v.Id())
 	}
 	exampleAdapter, ok := adapter.Get("example")
 	if !ok {
