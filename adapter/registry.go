@@ -4,14 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"maps"
 )
 
 var providers = make(map[string]Adapter)
 
 var (
-	ErrAdapterIsNil    = errors.New("registry: adapter instance cannot be nil")
-	ErrPlatformIsEmpty = errors.New("registry: adapter platform name cannot be empty")
-	ErrPlatformExists  = errors.New("registry: adapter for this platform already exists")
+	ErrAdapterIsNil           = errors.New("registry: adapter instance cannot be nil")
+	ErrAdapterIdIsEmpty       = errors.New("registry: adapter id cannot be empty")
+	ErrAdapterMetaDataIsEmpty = errors.New("registry: adapter metadata cannot be empty")
+	ErrAdapterIdExists        = errors.New("registry: adapter id already exists")
 )
 
 // Register 注册一个适配器实例到全局适配器注册表中
@@ -21,31 +23,33 @@ func Register(a Adapter) error {
 		return ErrAdapterIsNil
 	}
 
-	platform := a.Platform()
-	if platform == "" {
-		return ErrPlatformIsEmpty
+	meta := a.Metadata()
+	if (meta == Metadata{}) {
+		return ErrAdapterMetaDataIsEmpty
 	}
 
-	if _, exists := providers[platform]; exists {
-		return fmt.Errorf("%w: %s", ErrPlatformExists, platform)
+	if meta.Id == ""{
+		return ErrAdapterIdIsEmpty
 	}
 
-	providers[platform] = a
-	log.Printf("Adapter '%s' registered successfully.", platform)
+	if _, exists := providers[meta.Id]; exists {
+		return fmt.Errorf("%w: %s", ErrAdapterIdExists, meta.Id)
+	}
+
+	providers[meta.Id] = a
+	log.Printf("Adapter '%s' registered successfully.", meta.Id)
 	return nil
 }
 
 // Get 从注册表中获取指定平台的适配器实例
-func Get(platform string) (Adapter, bool) {
-    p, ok := providers[platform]
-    return p, ok
+func Get(id string) (Adapter, bool) {
+	p, ok := providers[id]
+	return p, ok
 }
 
 // GetAll 返回所有已注册的适配器实例的副本
 func GetAll() map[string]Adapter {
-    clone := make(map[string]Adapter)
-    for k, v := range providers {
-        clone[k] = v
-    }
-    return clone
+	clone := make(map[string]Adapter)
+	maps.Copy(clone, providers)
+	return clone
 }

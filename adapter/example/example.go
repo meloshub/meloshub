@@ -20,7 +20,15 @@ func init() {
 
 func New() *ExampleAdapter {
 	a := &ExampleAdapter{}
-	a.Init("example")
+	metadata := adapter.Metadata{
+		Id:          "example",
+		Title:       "Example Adapter",
+		Type:        adapter.TypeCommunity,
+		Version:     "1.0.0",
+		Author:      "meloshub",
+		Description: "a exmple adapter for meloshub development",
+	}
+	a.Init(metadata)
 	return a
 }
 
@@ -32,6 +40,10 @@ func (a *ExampleAdapter) GetSongByID(id string) (*model.Song, error) {
 	return &model.Song{
 		ID: id,
 	}, nil
+}
+
+func (a *ExampleAdapter) GetLyricsByID(id string) (string, error) {
+	return "", nil
 }
 
 func (a *ExampleAdapter) GetAlbumSongsByID(id string) ([]model.Song, error) {
