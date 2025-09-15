@@ -14,7 +14,8 @@ import (
 
 // Session 定义了一个带有 Cookie 管理功能的 HTTP 会话
 type Session struct {
-	Client *http.Client
+	Client  *http.Client
+	Headers map[string]string
 }
 
 // newResponse 从 http.Response 创建一个自定义的 Response 对象
@@ -42,6 +43,10 @@ func NewSession() *Session {
 		Client: &http.Client{
 			Jar:     jar,
 			Timeout: 30 * time.Second,
+		},
+		Headers: map[string]string{
+			
+			"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0",
 		},
 	}
 }
@@ -128,9 +133,10 @@ func (s *Session) SetCookieFromMap(cookies map[string]string, targetURL string) 
 // Get 发送GET请求
 func (s *Session) Get(url string, params map[string]string) (*Response, error) {
 	req := &Request{
-		Method: "GET",
-		URL:    url,
-		Params: params,
+		Method:  "GET",
+		Headers: s.Headers,
+		URL:     url,
+		Params:  params,
 	}
 	return s.Do(req)
 }
@@ -138,9 +144,10 @@ func (s *Session) Get(url string, params map[string]string) (*Response, error) {
 // PostForm 发送POST表单请求
 func (s *Session) PostForm(url string, data map[string]any) (*Response, error) {
 	req := &Request{
-		Method: "POST",
-		URL:    url,
-		Data:   data,
+		Method:  "POST",
+		Headers: s.Headers,
+		URL:     url,
+		Data:    data,
 	}
 	return s.Do(req)
 }
@@ -148,9 +155,10 @@ func (s *Session) PostForm(url string, data map[string]any) (*Response, error) {
 // PostJSON 发送POST JSON请求
 func (s *Session) PostJSON(url string, jsonData any) (*Response, error) {
 	req := &Request{
-		Method: "POST",
-		URL:    url,
-		Json:   jsonData,
+		Method:  "POST",
+		Headers: s.Headers,
+		URL:     url,
+		Json:    jsonData,
 	}
 	return s.Do(req)
 }
