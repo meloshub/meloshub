@@ -5,8 +5,6 @@ import (
 
 	"github.com/meloshub/meloshub/adapter"
 	"github.com/meloshub/meloshub/logging"
-
-	_ "github.com/meloshub/meloshub/adapter/example"
 )
 
 func main() {
@@ -24,12 +22,8 @@ func main() {
 	for _, v := range adapters {
 		println(v.Id())
 	}
-	exampleAdapter, ok := adapter.Get("example")
+	_, ok := adapter.Get("example")
 	if !ok {
 		slog.Error("adapter 'example' is not existed")
 	}
-	exampleAdapter.SearchSong("夜的第七章", adapter.SearchOptions{
-		Page:  1,
-		Limit: 10,
-	})
 }

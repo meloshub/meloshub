@@ -22,26 +22,26 @@ type Adapter interface {
 	// Id 获取适配器唯一标识符
 	Id() string
 
-	// SearchSong 根据关键词搜索歌曲。
+	// Search 根据关键词搜索歌曲。
 	// 返回一个歌曲切片和可能发生的错误。
-	SearchSong(keyword string, options SearchOptions) ([]model.Song, error)
+	Search(keyword string, options SearchOptions) ([]model.Song, error)
 
-	// GetSongByID 根据歌曲ID获取歌曲的详细信息。
-	GetSongByID(id string) (*model.Song, error)
+	// PlayURL 获取歌曲播放链接。
+	PlayURL(id string) (string, error)
 
-	// GetLyricsByID 获取歌词信息。
-	GetLyricsByID(id string) (string, error)
+	// Lyrics 获取歌词信息。
+	Lyrics(id string) (string, error)
 
-	// GetAlbumSongsByID 根据专辑ID获取该专辑下的所有歌曲。
-	GetAlbumSongsByID(id string) ([]model.Song, error)
+	// AlbumDetail 根据专辑ID获取该专辑的详细信息。
+	AlbumDetail(id string) (model.Album, error)
 }
 
 type Base struct {
-	id      string           //适配器唯一标识
-	metadata Metadata        //适配器元数据
-	Session *network.Session //会话实例
-	Logger  *slog.Logger     //日志上下文实例
-	Config  map[string]any   //适配器配置项
+	id       string           //适配器唯一标识
+	metadata Metadata         //适配器元数据
+	Session  *network.Session //会话实例
+	Logger   *slog.Logger     //日志上下文实例
+	Config   map[string]any   //适配器配置项
 }
 
 // Init 初始化 BaseAdapter

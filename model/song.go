@@ -1,38 +1,38 @@
 package model
 
-// Artist 艺术家信息
-type Artist struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+// Singer 歌手信息
+type Singer struct {
+	ID   string `json:"id"`   //歌手id
+	Name string `json:"name"` //歌手名称
 }
 
 // Album 专辑信息
 type Album struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	CoverURL string `json:"cover_url"`
+	ID              string `json:"id"`               //专辑id
+	Name            string `json:"name"`             //专辑名称
+	Description     string `json:"description"`      //专辑描述
+	PublicTimestamp int64  `json:"public_timestamp"` //发布时间戳
+	CoverURL        string `json:"cover_url"`        //封面链接
+	SongList        []Song `json:"song_list"`        //歌曲信息列表
 }
 
-// Audio 音频文件信息
+// AudioFile 音频文件信息
 type AudioFile struct {
-	Md5     string `json:"md5"`
-	Quality int    `json:"quality"`
-	Format  string `json:"format"`
-	FileSize    int64  `json:"size"`
-	URL     string `json:"url"`
+	Name     string `json:"name"`    // 音频名称
+	Format   string `json:"format"`  // 音频格式
+	Quality  int    `json:"quality"` // 音频质量
+	FileSize int64  `json:"size"`    // 文件大小
+	Bytes    string `json:"bytes"`   // 音频的二进制数据
+	Md5      string `json:"md5"`     // 二进制数据的32位md5编码
 }
 
-// Song 统一的歌曲抽象模型
+// Song 统一的歌曲信息抽象模型
 type Song struct {
-	ID         string   `json:"id"`               // 歌曲在源平台的唯一ID
-	Source     string   `json:"source"`           // 源平台标识, e.g., "netease", "qqmusic", "kuwo"
-	Title      string   `json:"title"`            // 歌曲标题
-	Artists    []Artist `json:"artists"`          // 艺术家列表
-	Album      Album    `json:"album"`            // 所属专辑
-	AudioURL   string   `json:"audio_url"`        // 获取到的音频播放链接
-	DurationMs int      `json:"duration_ms"`      // 歌曲时长（毫秒）
-	AudioFiles []AudioFile `json:"audio_files,omitempty"` // 可选的多质量音频文件列表，如果有的话
-	Playable   bool     `json:"playable"`         // 当前是否可播放（可能因地区限制等不可播放）
-	IsVIP      bool     `json:"is_vip"`           // 在源平台是否为VIP歌曲
-	Lyrics     string   `json:"lyrics,omitempty"` // 歌词文本（可选）
+	ID        string   `json:"id"`         // 歌曲在源平台的唯一ID
+	Source    string   `json:"source"`     // 源平台标识
+	Title     string   `json:"title"`      // 歌曲标题
+	Singers   []Singer `json:"singers"`    // 歌手列表
+	AlbumId   string   `json:"album_id"`   // 所属专辑id
+	AlbumName string   `json:"album_name"` // 所属专辑名称
+	Playable  bool     `json:"playable"`   // 当前是否可播放
 }
