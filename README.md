@@ -4,6 +4,9 @@ MelosHub是一个跨平台音乐资源搜索的中间层。它提供一个统一
 
 命名由来：melos这个词源自古希腊语“Melos”（μέλος），意为旋律，音律，曲调，歌曲。hub就是枢纽，集线器。~~所以你可以称本项目为“旋律集线器”。~~
 
+> [!NOTE]
+> 此项目还在积极开发中，项目中的函数定义、项目结构、用法可能会不断变化。
+
 ## 使用
 
 安装：
@@ -11,6 +14,14 @@ MelosHub是一个跨平台音乐资源搜索的中间层。它提供一个统一
 ```bash
 go get https://github.com/meloshub/meloshub
 ```
+
+运行：
+
+```
+go run main.go
+```
+
+### 初始化适配器
 
 初始化日志模块：
 
@@ -41,17 +52,41 @@ for _, v := range adapters {
 }
 ```
 
+### 适配器基础API
+
 使用指定适配器进行音乐搜索：
 
 ```go
-exampleAdapter, ok := adapter.Get("example")
+qqmusic, ok := adapter.Get("qqmusic")
 if !ok {
 		slog.Error("adapter 'example' is not existed")
 	}
-exampleAdapter.SearchSong("夜的第七章", adapter.SearchOptions{
+qqmusic.Search("夜的第七章", adapter.SearchOptions{
     Page:  1,
     Limit: 10,
 })
+```
+
+根据平台的歌曲id播放歌曲：
+
+```go
+playUrl, err := qqmusic.PlayURL("004Ng8xu20eirf")
+if err != nil {
+	slog.Error(err.Error())
+	return
+}
+slog.Info(fmt.Sprint("Got play url: ", playUrl))
+```
+
+根据平台的歌曲id获取歌词：
+
+```go
+lyrics, err := qqmusic.Lyrics(songList[0].ID)
+if err != nil {
+	slog.Error(err.Error())
+	return
+}
+slog.Info(fmt.Sprintln("Lyrics: \n", lyrics))
 ```
 
 ## 编写适配器（开发者）
