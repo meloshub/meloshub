@@ -59,12 +59,16 @@ for _, v := range adapters {
 ```go
 qqmusic, ok := adapter.Get("qqmusic")
 if !ok {
-		slog.Error("adapter 'example' is not existed")
-	}
-qqmusic.Search("夜的第七章", adapter.SearchOptions{
-    Page:  1,
-    Limit: 10,
+	slog.Error("adapter 'example' is not existed")
+}
+songList, err := qqmusic.Search("夜的第七章", adapter.SearchOptions{
+	Page:  1,
+	Limit: 10,
 })
+if err != nil {
+	slog.Error(err.Error())
+	return
+}
 ```
 
 根据平台的歌曲id播放歌曲：
