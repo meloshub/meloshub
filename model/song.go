@@ -8,12 +8,13 @@ type Singer struct {
 
 // Album 专辑信息
 type Album struct {
-	ID              string `json:"id"`               //专辑id
-	Name            string `json:"name"`             //专辑名称
-	Description     string `json:"description"`      //专辑描述
-	PublicTimestamp int64  `json:"public_timestamp"` //发布时间戳
-	CoverURL        string `json:"cover_url"`        //封面链接
-	SongList        []Song `json:"song_list"`        //歌曲信息列表
+	ID              string   `json:"id"`               //专辑id
+	Name            string   `json:"name"`             //专辑名称
+	Description     string   `json:"description"`      //专辑描述
+	PublicTimestamp int64    `json:"public_timestamp"` //发布时间戳
+	CoverURL        string   `json:"cover_url"`        //封面链接
+	SongList        []Song   `json:"song_list"`        //歌曲信息列表
+	Singers         []Singer `json:"singer"`           //演唱者列表
 }
 
 // AudioFile 音频文件信息
