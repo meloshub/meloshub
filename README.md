@@ -59,7 +59,7 @@ for _, v := range adapters {
 ```go
 qqmusic, ok := adapter.Get("qqmusic")
 if !ok {
-	slog.Error("adapter 'example' is not existed")
+	slog.Error("adapter 'qqmusic' is not existed")
 }
 songList, err := qqmusic.Search("夜的第七章", adapter.SearchOptions{
 	Page:  1,
@@ -91,6 +91,22 @@ if err != nil {
 	return
 }
 slog.Info(fmt.Sprintln("Lyrics: \n", lyrics))
+```
+
+根据平台的专辑id获取专辑信息：
+
+```go
+albumDetail, err := adapterQQmusic.AlbumDetail("002jLGWe16Tf1H")
+if err != nil {
+	slog.Error(err.Error())
+	return
+}
+jsonBytes, err = json.MarshalIndent(albumDetail, "", "  ")
+if err != nil {
+	fmt.Println("JSON marshaling failed:", err)
+	return
+}
+fmt.Println(string(jsonBytes))
 ```
 
 ## 编写适配器（开发者）
